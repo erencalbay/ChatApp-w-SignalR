@@ -1,8 +1,6 @@
 using SignalRChatServer.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>policy
     .AllowCredentials()
@@ -12,12 +10,15 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>policy
 
 builder.Services.AddSignalR();
 
-app.MapGet("/", () => "Hello World!");
+var app = builder.Build();
+
 app.UseCors();
+app.UseRouting();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<ChatHub>("/chathub");
+    //https://localhost:7298/myhub
+    endpoints.MapHub<ChatHub>("/myhub");
 });
 
 app.Run();
