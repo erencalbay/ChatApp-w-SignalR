@@ -9,7 +9,8 @@
     <script>
         $(document).ready(() => {
             const connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://localhost:7298/myhub").build();
+            .withUrl("https://localhost:7298/chathub")
+            .build();
 
             connection.start();
 
@@ -26,19 +27,17 @@
                 const nickName = $("#txtNickName").val();
                 connection.invoke("GetNickName", nickName).catch(error => console.log(error));
             });
-
-
+            
             connection.on("clientJoined", nickName => {
-                $("#clientDurumMesajlari").html(`${nickName} giris yapti.`)
+                window.alert(nickName);
+                $("#clientDurumMesajlari").html(`${nickName} giris yapti.`);
                 $("#clientDurumMesajlari").fadeIn(2000, () => {
                     setTimeout(() => {
                         $("#clientDurumMesajlari").fadeOut(2000);
                     }, 2000)
                 });
-
-            });
-          
-        });
+            })     
+        })
     </script>
 </head>
 <body>
@@ -49,7 +48,7 @@
             <!-- Sol menü -->
             <div class="col-md-3">
                 <!-- oda -->
-                <input class="form-control form-control-lg disabled" type="text" placeholder="Oda Adı">
+                <input class="form-control form-control-lg disabled" type="text" placeholder="Oda Adi">
                 <button type="button" class="btn btn-info rightButton disabled">Oda Oluştur</button>
                 <select size="5" style="width: 100%;" class="form-select disabled" multiple>
                     <option selected value="-1">Odalar</option>
@@ -68,9 +67,8 @@
                 </div>
                 <!--Clientler-->
             </div>
-            <div class="col-md-5">
-                <div class = "alert alert-success" role="alert">
-                    A simple Success
+            <div class="col-md-6">
+                <div class = "alert alert-success" id="clientDurumMesajlari" style="display: none;">
                 </div>
                 <!--Mesajlaşma-->
                 <textarea class="form-control" style="margin-top: 5px;" placeholder="İletilecek Mesaj Buraya Giriniz." rows="3">
@@ -92,7 +90,7 @@
                 <!--Mesajlasma-->
             </div>
             <div class="col-md-3">
-                <input class="form-control form-control-lg" type="text" placeholder="Adınız/Nick" id="txtNickName">
+                <input class="form-control form-control-lg" type="text" placeholder="Adiniz/Nick" id="txtNickName">
                 <button type="button" class="btn btn-success leftbutton" id="btnGirisYap">Giriş Yap</button>
             </div>
         </div>

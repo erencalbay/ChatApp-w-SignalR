@@ -1,12 +1,21 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using SignalRChatServer.Data;
+using SignalRChatServer.Models;
 
 namespace SignalRChatServer.Hubs
 {
     public class ChatHub : Hub
     {
-        public async Task SendMessageAsync(string message)
+        public async Task GetNickName(string nickName)
         {
-            await Clients.All.SendAsync("receiveMessage", message);
+            Client client = new Client
+            {
+                ConnectionId = Context.ConnectionId,
+                NickName = nickName
+            };
+            ClientSource.Clients.Add(client);
+            await Clients.Others.SendAsync("clientJoined", nickName);
+            Console.WriteLine(nickName);
         }
     }
 }

@@ -17,8 +17,8 @@ app.UseRouting();
 
 app.UseEndpoints(endpoints =>
 {
-    //https://localhost:7298/myhub
-    endpoints.MapHub<ChatHub>("/myhub");
+    //https://localhost:7298/chathub
+    endpoints.MapHub<ChatHub>("/chathub");
 });
 
 app.Run();
