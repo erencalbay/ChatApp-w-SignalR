@@ -33,6 +33,8 @@
                 const nickName = $("#txtNickName").val();
                 if(!(nickName==""))
                     connection.invoke("GetNickName", nickName).catch(error => console.log(error));
+                    $(".disabled").removeAttr("disabled");
+
             });
             
             connection.on("clientJoined", nickName => {
@@ -73,6 +75,32 @@
                 _message.find("h5")[1].innerHTML = "Sen";
                 $(".messages").append(_message);
             });
+
+            $("#btnOdaOlustur").click(() => {
+                connection.invoke("AddGroup", $("#txtOdaAdi").val());
+            });
+
+            connection.on("groups", groups => {
+                $(".rooms").html("");
+                let options = `<option selected value="-1">Odalar</option>`; 
+                $.each(groups, (index, item) => {
+                    options += `<option value="${item.groupName}">${item.groupName}</option>`;
+                });
+                $(".rooms").append(options);
+            });
+
+            $("#btnOdalaraGir").click(() => {
+                let groupNames = [];
+                $(".rooms options:selected").map((i,e) => {
+                    groupNames.push(e.innerHTML);
+                })
+                connection.invoke("AddClientToGroup", groupNames)
+            });
+
+            $(".rooms").change(function () {
+               let groupName = $(this).val();
+               connection.invoke("GetClientToGroup", groupName[0]);
+            })
         })
     </script>
 </head>
@@ -84,12 +112,12 @@
             <!-- Sol menü -->
             <div class="col-md-3">
                 <!-- oda -->
-                <input class="form-control form-control-lg disabled" type="text" placeholder="Oda Adi">
-                <button type="button" class="btn btn-info rightButton disabled">Oda Oluştur</button>
-                <select size="5" style="width: 100%;" class="form-select disabled" multiple>
+                <input class="form-control form-control-lg disabled" type="text" placeholder="Oda Adi" id="txtOdaAdi">
+                <button type="button" class="btn btn-info rightButton disabled" id="btnOdaOlustur">Oda Olustur</button>
+                <select size="5" style="width: 100%;" class="form-select disabled rooms" multiple>
                     <option selected value="-1">Odalar</option>
                 </select>
-                <button type="button" class="btn btn-primary rightButton disabled">Seçili Odalara Gir</button>
+                <button type="button" class="btn btn-primary rightButton disabled" id="btnOdalaraGir">Seçili Odalara Gir</button>
                 <!--Oda-->
                 <br><br><br>
                 <!--Clientler-->
